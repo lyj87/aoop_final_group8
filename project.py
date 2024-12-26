@@ -23,8 +23,8 @@ pygame.display.set_caption("64x64 Map Game")
 
 # 加载图片资源
 background_img = pygame.image.load("./assets/background.png")
-tile_unbreakable_img = pygame.image.load("./assets/unbreakable_tile.png")
-tile_breakable_img = pygame.image.load("./assets/breakable_tile.png")
+tile_unbreakable_img = pygame.image.load("./assets/stone.png")
+tile_breakable_img = pygame.image.load("./assets/grass.png")
 player_img = pygame.image.load("./assets/player.png")
 
 # 调整图片大小
