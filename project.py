@@ -6,8 +6,8 @@ import keyboard
 pygame.init()
 
 # 常量定义
-TILE_SIZE = 20
-GRID_SIZE = 80  # 游戏地图的网格大小
+TILE_SIZE = 40
+GRID_SIZE = 40  # 游戏地图的网格大小
 SCOREBOARD_WIDTH = 250  # 计分板宽度
 SCREEN_WIDTH = GRID_SIZE * TILE_SIZE + SCOREBOARD_WIDTH
 SCREEN_HEIGHT = GRID_SIZE * TILE_SIZE
@@ -21,7 +21,7 @@ BLUE = (0, 0, 255)
 
 # 初始化屏幕
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("64x64 Map Game")
+pygame.display.set_caption(f"{GRID_SIZE}x{GRID_SIZE} Map Game")
 
 # 加载图片资源
 background_img = pygame.image.load("./assets/background.png")
@@ -46,7 +46,7 @@ class Player:
     def __init__(self, x, y):
         self.x = x * TILE_SIZE  # 转换为像素坐标
         self.y = y * TILE_SIZE
-        self.speed = 10  # 每帧移动的像素距离
+        self.speed = 20  # 每帧移动的像素距离
         self.image = player_img
         self.direction = "DOWN"  # 初始方向为向下
         self.score = 0
@@ -115,11 +115,11 @@ class Map:
             for x in range(GRID_SIZE):
                 if x == 0 or x == GRID_SIZE - 1 or y == 0 or y == GRID_SIZE - 1:
                     self.grid[x][y] = TileType.UNBREAKABLE
-                elif x % 2 == 0 and y % 2 == 0:
+                elif x % 2 == 0 and y % 2 == 0 and not (x == GRID_SIZE-2 and y == GRID_SIZE-2):
                     self.grid[x][y] = TileType.UNBREAKABLE
                 else:
                     # 随机生成可破坏的石块
-                    if random.random() < 0.2:
+                    if random.random() < 0.2 and not (x == 1 and y == 1) and not (x == GRID_SIZE-2 and y == GRID_SIZE-2):
                         self.grid[x][y] = TileType.BREAKABLE
 
     def draw(self, screen):
@@ -138,6 +138,7 @@ class Bomb:
         self.tile_x = x
         self.tile_y = y
         self.timer = 90  # 爆炸倒计时 3 秒（30 帧/秒）
+        self.timer = 60  # 爆炸倒计时 2 秒（30 帧/秒）
         self.exploded = False
         self.explosion_range = explosion_range
         self.image = pygame.image.load("./assets/bomb.jpg")
@@ -186,10 +187,12 @@ class Bomb:
     
 # 計分板
 class Scoreboard:
-    def __init__(self, player):
+    def __init__(self, player, player2):
         self.player = player
+        self.player2 = player2
         self.font = pygame.font.SysFont("Arial", 24)
         self.title_font = pygame.font.SysFont("Arial", 32, bold=True)
+        self.subtitle_font = pygame.font.SysFont("Arial", 24, bold=True)
 
     def draw(self, screen):
         # 繪製計分板
@@ -199,23 +202,54 @@ class Scoreboard:
         title_text = self.title_font.render("Scoreboard", True, WHITE)
         screen.blit(title_text, (GRID_SIZE * TILE_SIZE + 20, 20))
 
-        # 繪製分數
+        # 繪製player1分數、爆炸範圍
+        text = self.subtitle_font.render(f"Player 1", True, WHITE)
+        screen.blit(text, (GRID_SIZE * TILE_SIZE + 20, 60))
+    
         score_text = self.font.render(f"Score: {self.player.score}", True, WHITE)
-        screen.blit(score_text, (GRID_SIZE * TILE_SIZE + 20, 60))
+        screen.blit(score_text, (GRID_SIZE * TILE_SIZE + 20, 90))
 
-        # 繪製爆炸範圍
         explosion_range_text = self.font.render(f"Explosion Range: {self.player.explosion_range}", True, WHITE)
-        screen.blit(explosion_range_text, (GRID_SIZE * TILE_SIZE + 20, 90))
+        screen.blit(explosion_range_text, (GRID_SIZE * TILE_SIZE + 20, 120))
+
+        # 繪製player2分數、爆炸範圍
+        text2 = self.subtitle_font.render(f"Player 2", True, WHITE)
+        screen.blit(text2, (GRID_SIZE * TILE_SIZE + 20, 160))
+
+        score_text2 = self.font.render(f"Score: {self.player2.score}", True, WHITE)
+        screen.blit(score_text2, (GRID_SIZE * TILE_SIZE + 20, 190))
+
+        explosion_range_text = self.font.render(f"Explosion Range: {self.player.explosion_range}", True, WHITE)
+        screen.blit(explosion_range_text, (GRID_SIZE * TILE_SIZE + 20, 220))
 
         # 繪製菜單
         menu_text = self.title_font.render("Menu", True, WHITE)
-        screen.blit(menu_text, (GRID_SIZE * TILE_SIZE + 20, 160))
+        screen.blit(menu_text, (GRID_SIZE * TILE_SIZE + 20, 280))
 
         # 菜單選項
         menu_items = ["Player 1","WASD: Move","Q: Place Bomb","","Player 2","Arrow Keys: Move", "Shift: Place Bomb","","ESC: Quit"]
         for i, item in enumerate(menu_items):
             item_text = self.font.render(item, True, WHITE)
-            screen.blit(item_text, (GRID_SIZE * TILE_SIZE + 20, 200 + i * 30))
+            screen.blit(item_text, (GRID_SIZE * TILE_SIZE + 20, 320 + i * 30))
+
+# 碰撞检测
+def check_collision(player,bombs, bombs2):
+    player_rect = pygame.Rect(player.x, player.y, TILE_SIZE, TILE_SIZE)
+    
+    for bomb in bombs:
+        if bomb.exploded:
+            for effect_x, effect_y in bomb.explosion_effects:
+                explosion_rect = pygame.Rect(effect_x * TILE_SIZE, effect_y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+                if player_rect.colliderect(explosion_rect):
+                    return True
+
+    for bomb2 in bombs2:
+        if bomb2.exploded:
+            for effect_x, effect_y in bomb2.explosion_effects:
+                explosion_rect = pygame.Rect(effect_x * TILE_SIZE, effect_y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+                if player_rect.colliderect(explosion_rect):
+                    return True
+    return False
 
 # 主游戏逻辑
 def main():
@@ -224,10 +258,10 @@ def main():
 
     game_map = Map()
     player = Player(1, 1)
-    player2 = Player(31, 31)
+    player2 = Player(GRID_SIZE+GRID_SIZE%2-2, GRID_SIZE+GRID_SIZE%2-2)
     bombs = []
     bombs2 = []
-    scoreboard = Scoreboard(player)
+    scoreboard = Scoreboard(player, player2)
 
     while running:
         for y in range(1, GRID_SIZE - 1):
