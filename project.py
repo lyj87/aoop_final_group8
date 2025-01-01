@@ -7,8 +7,8 @@ pygame.init()
 
 # 常量定义
 TILE_SIZE = 20
-GRID_SIZE = 33  # 游戏地图的网格大小
-SCOREBOARD_WIDTH = 200  # 计分板宽度
+GRID_SIZE = 80  # 游戏地图的网格大小
+SCOREBOARD_WIDTH = 250  # 计分板宽度
 SCREEN_WIDTH = GRID_SIZE * TILE_SIZE + SCOREBOARD_WIDTH
 SCREEN_HEIGHT = GRID_SIZE * TILE_SIZE
 
@@ -46,7 +46,7 @@ class Player:
     def __init__(self, x, y):
         self.x = x * TILE_SIZE  # 转换为像素坐标
         self.y = y * TILE_SIZE
-        self.speed = 4  # 每帧移动的像素距离
+        self.speed = 10  # 每帧移动的像素距离
         self.image = player_img
         self.direction = "DOWN"  # 初始方向为向下
         self.score = 0
@@ -189,28 +189,33 @@ class Scoreboard:
     def __init__(self, player):
         self.player = player
         self.font = pygame.font.SysFont("Arial", 24)
+        self.title_font = pygame.font.SysFont("Arial", 32, bold=True)
 
     def draw(self, screen):
         # 繪製計分板
         pygame.draw.rect(screen, GRAY, (GRID_SIZE * TILE_SIZE, 0, SCOREBOARD_WIDTH, SCREEN_HEIGHT))
 
         # 繪製標題
-        title_text = self.font.render("Scoreboard", True, WHITE)
+        title_text = self.title_font.render("Scoreboard", True, WHITE)
         screen.blit(title_text, (GRID_SIZE * TILE_SIZE + 20, 20))
 
         # 繪製分數
         score_text = self.font.render(f"Score: {self.player.score}", True, WHITE)
         screen.blit(score_text, (GRID_SIZE * TILE_SIZE + 20, 60))
 
+        # 繪製爆炸範圍
+        explosion_range_text = self.font.render(f"Explosion Range: {self.player.explosion_range}", True, WHITE)
+        screen.blit(explosion_range_text, (GRID_SIZE * TILE_SIZE + 20, 90))
+
         # 繪製菜單
-        menu_text = self.font.render("Menu:", True, WHITE)
-        screen.blit(menu_text, (GRID_SIZE * TILE_SIZE + 20, 120))
+        menu_text = self.title_font.render("Menu", True, WHITE)
+        screen.blit(menu_text, (GRID_SIZE * TILE_SIZE + 20, 160))
 
         # 菜單選項
-        menu_items = ["WASD: Move", "Q: Place Bomb", "ESC: Quit"]
+        menu_items = ["Player 1","WASD: Move","Q: Place Bomb","","Player 2","Arrow Keys: Move", "Shift: Place Bomb","","ESC: Quit"]
         for i, item in enumerate(menu_items):
             item_text = self.font.render(item, True, WHITE)
-            screen.blit(item_text, (GRID_SIZE * TILE_SIZE + 20, 160 + i * 30))
+            screen.blit(item_text, (GRID_SIZE * TILE_SIZE + 20, 200 + i * 30))
 
 # 主游戏逻辑
 def main():
@@ -276,7 +281,7 @@ def main():
             player2_tile_y = player2.y // TILE_SIZE
             if not any(bomb2.tile_x == player2_tile_x and bomb2.tile_y == player2_tile_y for bomb2 in bombs):
                 # 调整爆炸范围到 3 格
-                bombs2.append(Bomb(player2_tile_x, player2_tile_y, explosion_range))
+                bombs2.append(Bomb(player2_tile_x, player2_tile_y, player2.explosion_range))
 
         # 更新炸弹状态
         for bomb in bombs:
@@ -304,6 +309,9 @@ def main():
 
         pygame.display.flip()
         clock.tick(30)
+        
+        if keyboard.is_pressed('esc'):
+            running = False
 
     pygame.quit()
     
