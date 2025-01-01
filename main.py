@@ -7,9 +7,8 @@ from scoreboard import Scoreboard
 from constant import *
 
 pygame.init()
-
-screen = pygame.display.set_mode((GRID_SIZE * TILE_SIZE + SCOREBOARD_WIDTH, GRID_SIZE * TILE_SIZE))
-pygame.display.set_caption("Game")
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.display.set_caption(f"{GRID_SIZE}x{GRID_SIZE} Map Game")
 
 background_img = pygame.image.load("./assets/background.png")
 background_img = pygame.transform.scale(background_img, (TILE_SIZE, TILE_SIZE))
@@ -21,6 +20,9 @@ tile_breakable_img = pygame.image.load("./assets/grass.png")
 tile_breakable_img = pygame.transform.scale(tile_breakable_img, (TILE_SIZE, TILE_SIZE))
 
 player_img = pygame.image.load("./assets/player.png")
+player_img= pygame.transform.scale(player_img, (TILE_SIZE, TILE_SIZE))
+player_frames = player_img
+'''
 player_frames = {
     "DOWN": [],
     "RIGHT": [],
@@ -32,6 +34,7 @@ for i in range(6):  # 6 frames per direction
     player_frames["RIGHT"].append(player_img.subsurface((i * 32, 4 * 32, 32, 32)))
     player_frames["LEFT"].append(player_img.subsurface((i * 32, 4 * 32, 32, 32)))
     player_frames["UP"].append(player_img.subsurface((i * 32, 5 * 32, 32, 32)))
+'''
 
 clock = pygame.time.Clock()
 
@@ -40,10 +43,11 @@ def main():
 
     game_map = Map()
     player = Player(1, 1, player_frames)
-    player2 = Player(GRID_SIZE -2 , GRID_SIZE - 2, player_frames)
+    #player2 = Player(GRID_SIZE -2 , GRID_SIZE - 2, player_frames)
+    player2 = Player(GRID_SIZE+GRID_SIZE%2-2, GRID_SIZE+GRID_SIZE%2-2, player_frames)
     bombs = []
     bombs2 = []
-    scoreboard = Scoreboard(player)
+    scoreboard = Scoreboard(player, player2)
 
     while running:
         for y in range(1, GRID_SIZE - 1):
@@ -125,7 +129,7 @@ def main():
             TileType.BREAKABLE: tile_breakable_img,
         })
         scoreboard.draw(screen)
-        player.update_animation()
+        #player.update_animation()
         player.draw(screen)
         player2.draw(screen)
 
