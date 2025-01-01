@@ -4,19 +4,6 @@ import keyboard
 
 from constant import TILE_SIZE, TileType
 
-player_img = pygame.image.load("./assets/player.png")
-player_frames = {
-    "DOWN": [],
-    "RIGHT": [],
-    "LEFT": [],
-    "UP": []
-}
-for i in range(6):  # 6 frames per direction
-    player_frames["DOWN"].append(player_img.subsurface((i * 32, 3 * 32, 32, 32)))
-    player_frames["RIGHT"].append(player_img.subsurface((i * 32, 4 * 32, 32, 32)))
-    player_frames["LEFT"].append(player_img.subsurface((i * 32, 4 * 32, 32, 32)))
-    player_frames["UP"].append(player_img.subsurface((i * 32, 5 * 32, 32, 32)))
-
 # 玩家类
 class Player:
     def __init__(self, x, y, frames):

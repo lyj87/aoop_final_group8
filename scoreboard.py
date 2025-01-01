@@ -1,20 +1,39 @@
 import pygame
 from constant import GRID_SIZE, TILE_SIZE, SCOREBOARD_WIDTH, GRAY, WHITE
 
+import pygame
+
 class Scoreboard:
-    def __init__(self, player):
-        self.player = player
+    def __init__(self, players):
+        self.players = players  # 保存传入的玩家列表
         self.font = pygame.font.SysFont("Arial", 24)
 
     def draw(self, screen):
-        pygame.draw.rect(screen, GRAY, (GRID_SIZE * TILE_SIZE, 0, SCOREBOARD_WIDTH, GRID_SIZE * TILE_SIZE))
-        title_text = self.font.render("PAUSE", True, WHITE)
+        # 绘制背景
+        pygame.draw.rect(screen, (128, 128, 128), (GRID_SIZE * TILE_SIZE, 0, SCOREBOARD_WIDTH, GRID_SIZE * TILE_SIZE))
+
+        # 标题
+        title_text = self.font.render("PAUSE", True, (255, 255, 255))
         screen.blit(title_text, (GRID_SIZE * TILE_SIZE + 20, 40))
-        score_text = self.font.render(f"player1", True, WHITE)
-        screen.blit(score_text, (GRID_SIZE * TILE_SIZE + 20, 120))
-        score_text = self.font.render(f"score: {self.player.score}", True, WHITE)
-        screen.blit(score_text, (GRID_SIZE * TILE_SIZE + 20, 160))
-        score_text = self.font.render(f"heal : {self.player.heal}", True, WHITE)
-        screen.blit(score_text, (GRID_SIZE * TILE_SIZE + 20, 190))
-        score_text = self.font.render(f"bomb : {self.player.bomb}", True, WHITE)
-        screen.blit(score_text, (GRID_SIZE * TILE_SIZE + 20, 220))
+
+        # 遍历玩家，显示数据
+        y_offset = 100  # 初始Y位置
+        for player in self.players:
+            # 玩家名称
+            # name_text = self.font.render(player.name, True, (255, 255, 255))
+            # screen.blit(name_text, (GRID_SIZE * TILE_SIZE + 20, y_offset))
+
+            # 分数
+            score_text = self.font.render(f"Score: {player.score}", True, (255, 255, 255))
+            screen.blit(score_text, (GRID_SIZE * TILE_SIZE + 20, y_offset + 40))
+
+            # 生命值
+            heal_text = self.font.render(f"Heal: {player.heal}", True, (255, 255, 255))
+            screen.blit(heal_text, (GRID_SIZE * TILE_SIZE + 20, y_offset + 70))
+
+            # 炸弹
+            bomb_text = self.font.render(f"Bomb: {player.bomb}", True, (255, 255, 255))
+            screen.blit(bomb_text, (GRID_SIZE * TILE_SIZE + 20, y_offset + 100))
+
+            # 下一个玩家的Y偏移
+            y_offset += 150

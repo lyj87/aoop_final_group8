@@ -17,8 +17,8 @@ class Bomb:
         self.explosion_range = explosion_range
         self.owner = owner  # 炸弹的主人
 
-        self.explosion_frames = [pygame.image.load(f"./assets/explosion_{i}.png") for i in range(1, 4)]
-        self.explosion_frames = [pygame.transform.scale(frame, (TILE_SIZE, TILE_SIZE)) for frame in self.explosion_frames]
+        self.explosion_img = pygame.image.load("./assets/explosion.png")
+        self.explosion_frames = pygame.transform.scale (self.explosion_img, (TILE_SIZE, TILE_SIZE))
         self.explosion_timer = 12  # 爆炸动画持续时间
         self.explosion_effects = []  # 存放爆炸范围内的火焰动画
 
@@ -81,8 +81,8 @@ class Bomb:
             screen.blit(current_bomb_frame, (self.x, self.y))
         elif self.explosion_timer > 0:
             # 绘制爆炸效果
-            frame_index = (15 - self.explosion_timer) // 5  # 每 5 帧切换一张图片
-            explosion_frame = self.explosion_frames[frame_index]
+            # frame_index = (15 - self.explosion_timer) // 5  # 每 5 帧切换一张图片
+            explosion_frame = self.explosion_frames
             for effect_x, effect_y in self.explosion_effects:
                 screen.blit(explosion_frame, (effect_x * TILE_SIZE, effect_y * TILE_SIZE))
             self.explosion_timer -= 1
