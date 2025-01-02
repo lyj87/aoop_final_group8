@@ -1,5 +1,5 @@
 import pygame
-from constant import GRID_SIZE, TILE_SIZE, SCOREBOARD_WIDTH, GRAY, WHITE
+from constant import *
 
 import pygame
 
@@ -32,7 +32,7 @@ class Scoreboard:
             screen.blit(heal_text, (GRID_SIZE * TILE_SIZE + 20, y_offset + 70))
 
             # 炸弹
-            bomb_text = self.font.render(f"Bomb: {player.bomb}", True, (255, 255, 255))
+            bomb_text = self.font.render(f"Bomb: {player.bomb_num}", True, (255, 255, 255))
             screen.blit(bomb_text, (GRID_SIZE * TILE_SIZE + 20, y_offset + 100))
 
             # 炸弹

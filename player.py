@@ -1,10 +1,8 @@
-import pygame
-
 from constant import *
 
 # 玩家类
 class Player:
-    def __init__(self, x, y, frames):
+    def __init__(self, x, y, frames, explosion_range, score, heal, bomb_num):
         self.dx = x
         self.dy = y
         self.x = x * TILE_SIZE  # 转换为像素坐标
@@ -15,11 +13,13 @@ class Player:
         self.frame_index = 0  # 当前帧索引
         self.frame_timer = 0  # 用于控制动画速度
         self.image_frame = frames  # 所有方向的帧
+        self.placed_bomb = 0  # 用于记录最近一次放置炸弹的位置
+        self.placed_water = 0  # 用于记录最近一次放置炸弹的位置
 
-        self.explosion_range = 1  # 初始爆炸范围为 1 格
-        self.score = 0
-        self.heal = 3
-        self.bomb = 3
+        self.explosion_range = explosion_range  # 初始爆炸范围为 1 格
+        self.score = score
+        self.heal = heal
+        self.bomb_num = bomb_num
 
     def set_direction(self, dx, dy):
         if dx > 0:
@@ -65,6 +65,29 @@ class Player:
             if (grid[x][y] == TileType.HEAL):
                 self.heal += 1
                 grid[x][y] = TileType.EMPTY
+            
+            # 當角色 placed_water == 1 (放置炸彈后)，四個角都離開炸彈格，placed_water = 0
+            if (grid[corners[0][0] // TILE_SIZE][corners[0][1] // TILE_SIZE] != TileType.BOMB and 
+                grid[corners[1][0] // TILE_SIZE][corners[1][1] // TILE_SIZE] != TileType.BOMB and
+                grid[corners[2][0] // TILE_SIZE][corners[2][1] // TILE_SIZE] != TileType.BOMB and 
+                grid[corners[3][0] // TILE_SIZE][corners[3][1] // TILE_SIZE] != TileType.BOMB and 
+                self.placed_bomb == 1):
+                self.placed_bomb = 0
+            # 當角色 placed_water == 0 (未放置炸彈)，其中一個角都進入炸彈格，角色無法前進
+            if (grid[x][y] == TileType.BOMB and self.placed_bomb == 0):
+                return False
+            
+            # 當角色 placed_water == 1 (放置炸彈后)，四個角都離開炸彈格，placed_water = 0
+            if (grid[corners[0][0] // TILE_SIZE][corners[0][1] // TILE_SIZE] != TileType.WATER and 
+                grid[corners[1][0] // TILE_SIZE][corners[1][1] // TILE_SIZE] != TileType.WATER and
+                grid[corners[2][0] // TILE_SIZE][corners[2][1] // TILE_SIZE] != TileType.WATER and 
+                grid[corners[3][0] // TILE_SIZE][corners[3][1] // TILE_SIZE] != TileType.WATER and 
+                self.placed_water == 1):
+                self.placed_water = 0
+            # 當角色 placed_water == 0 (未放置炸彈)，其中一個角都進入炸彈格，角色無法前進
+            if (grid[x][y] == TileType.WATER and self.placed_water == 0):
+                return False
+            
         return True
     
     def update_animation(self):
@@ -75,7 +98,10 @@ class Player:
             self.frame_index = (self.frame_index + 1) % len(self.image_frame[self.direction])
     
     def draw(self, screen):
-        
         # 获取当前方向和帧
         current_frame = self.image_frame[self.direction][self.frame_index]
+        screen.blit(current_frame, (self.x, self.y))
+
+    def damage_draw(self, screen):
+        current_frame = damage_player_frames[self.direction][self.frame_index]
         screen.blit(current_frame, (self.x, self.y))

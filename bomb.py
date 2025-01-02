@@ -10,7 +10,7 @@ explosion_img = pygame.image.load("./assets/explosion.png")
 explosion_img = pygame.transform.scale (explosion_img, (TILE_SIZE, TILE_SIZE))
 
 class Bomb:
-    def __init__(self, x, y, explosion_range=0, owner=None):
+    def __init__(self, x, y, explosion_range, owner):
         self.x = x * TILE_SIZE
         self.y = y * TILE_SIZE
         self.tile_x = x
@@ -31,10 +31,11 @@ class Bomb:
         self.animation_counter = 0  # 动画计数器
         self.animation_speed = 15  # 每隔5帧（0.5秒）更新一次动画帧
 
-        self.damaged_players = set()  # 记录已受伤的玩家，确保伤害只生效一次
+        self.damaged_players = []  # 记录已受伤的玩家，确保伤害只生效一次
 
     def update(self, grid, players):
         if self.timer > 0:
+            grid[self.tile_x][self.tile_y] = TileType.BOMB  # 标记炸弹位置
             self.timer -= 1
             # 更新炸弹动画帧
             self.animation_counter += 1
@@ -43,6 +44,7 @@ class Bomb:
                 self.animation_counter = 0  # 重置计数器
         elif not self.exploded:
             self.exploded = True
+            grid[self.tile_x][self.tile_y] = TileType.EMPTY  # 爆炸后清除炸弹
             self.explosion(grid, players)
 
     def explosion(self, grid, players):
@@ -54,39 +56,38 @@ class Bomb:
         for dx, dy in directions:
             for step in range(1, self.explosion_range + 1):
                 nx, ny = self.tile_x + dx * step, self.tile_y + dy * step
-                print(f"Checking ({nx}, {ny})")
                 # 检查边界条件
-                if not (1 <= nx < GRID_SIZE - 2 and 1 <= ny < GRID_SIZE - 2):
+                if not (1 <= nx <= GRID_SIZE - 2 and 1 <= ny <= GRID_SIZE - 2):
                     break
                 # 根据不同的格子类型处理
                 elif grid[nx][ny] == TileType.UNBREAKABLE or grid[nx][ny] == TileType.AROUND:
-                    print(f"Hit unbreakable at ({nx}, {ny})")
                     break  # 遇到不可破坏砖块或边界，停止传播
                 elif grid[nx][ny] == TileType.BREAKABLE:
                     grid[nx][ny] = TileType.EMPTY  # 清除可破坏砖块
                     self.explosion_effects.append((nx, ny))  # 添加爆炸位置
-                    print(f"Hit breakable at ({nx}, {ny})")
                     break  # 停止当前方向传播
                 elif grid[nx][ny] == TileType.GRASS_BUFF_NUM:
                     grid[nx][ny] = TileType.BUFF_NUM
                     self.explosion_effects.append((nx, ny))  # 添加爆炸位置
-                    print(f"Hit buff_num at ({nx}, {ny})")
                     break
                 elif grid[nx][ny] == TileType.GRASS_BUFF_RANGE:
                     grid[nx][ny] = TileType.BUFF_RANGE
                     self.explosion_effects.append((nx, ny))  # 添加爆炸位置
-                    print(f"Hit buff_range at ({nx}, {ny})")
                     break
                 elif grid[nx][ny] == TileType.GRASS_HEAL:
                     grid[nx][ny] = TileType.HEAL
                     self.explosion_effects.append((nx, ny))  # 添加爆炸位置
-                    print(f"Hit heal at ({nx}, {ny})")
                     break
                 else:
                     self.explosion_effects.append((nx, ny))  # 添加普通爆炸范围
-                    print(f"Hit empty at ({nx}, {ny})")
 
-                    # 检测爆炸范围内是否击中玩家
+        # 检测爆炸范围内是否击中玩家
+        for dx, dy in directions:
+            for step in range(1, self.explosion_range + 1):
+                nx, ny = self.tile_x + dx * step, self.tile_y + dy * step
+                # 检查边界条件
+                if not (1 <= nx <= GRID_SIZE - 2 and 1 <= ny <= GRID_SIZE - 2):
+                    break
                 for player in players:
                     player_tile_x = (player.x + 8) // TILE_SIZE  # 补偿偏移量
                     player_tile_y = (player.y + 8) // TILE_SIZE
@@ -97,7 +98,7 @@ class Bomb:
         # """对玩家造成伤害，并增加得分（仅一次）"""
         if player not in self.damaged_players:
             player.heal -= 1  # 玩家生命值减1
-            self.damaged_players.add(player)  # 记录该玩家已受伤
+            self.damaged_players.append(player)  # 记录该玩家已受伤
             if player != self.owner:  # 如果受伤玩家不是炸弹主人
                 self.owner.score += 1  # 炸弹主人得分
 
@@ -111,7 +112,13 @@ class Bomb:
             # frame_index = (15 - self.explosion_timer) // 5  # 每 5 帧切换一张图片
             for effect_x, effect_y in self.explosion_effects:
                 screen.blit(self.explosion_frames, (effect_x * TILE_SIZE, effect_y * TILE_SIZE))
+            
+            for damage_player in self.damaged_players:
+                damage_player.damage_draw(screen)
+
             self.explosion_timer -= 1
+
+            
 
     def is_finished(self):
         return self.exploded and self.explosion_timer <= 0
