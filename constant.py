@@ -17,3 +17,7 @@ class TileType:
     UNBREAKABLE = 0
     BREAKABLE = 1
     EMPTY = 2
+    AROUND = 3
+    BUFF_RANGE = 4
+    BUFF_NUM = 5
+    HEAL = 6

@@ -1,5 +1,6 @@
 import pygame
 import keyboard
+
 from player import Player
 from map import Map
 from bomb import Bomb
@@ -9,14 +10,19 @@ from constant import *
 pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption(f"{GRID_SIZE}x{GRID_SIZE} Map Game")
-
+assets_img = pygame.image.load("./assets/assets.png")
 background_img = pygame.image.load("./assets/background.png")
 background_img = pygame.transform.scale(background_img, (TILE_SIZE, TILE_SIZE))
 
-tile_unbreakable_img = pygame.image.load("./assets/stone.png")
+tile_around_img = assets_img.subsurface(10 * 32, 18 * 32, 32, 32)
+tile_around_img = pygame.transform.scale(tile_around_img, (TILE_SIZE, TILE_SIZE))
+
+# tile_unbreakable_img = pygame.image.load("./assets/stone.png")
+tile_unbreakable_img = assets_img.subsurface(10 * 32, 17 * 32, 32, 32)
 tile_unbreakable_img = pygame.transform.scale(tile_unbreakable_img, (TILE_SIZE, TILE_SIZE))
 
-tile_breakable_img = pygame.image.load("./assets/grass.png")
+# tile_breakable_img = pygame.image.load("./assets/assets.png")
+tile_breakable_img = assets_img.subsurface(9 * 32, 13 * 32, 32, 32)
 tile_breakable_img = pygame.transform.scale(tile_breakable_img, (TILE_SIZE, TILE_SIZE))
 
 player_img = pygame.image.load("./assets/player.png")
@@ -47,7 +53,7 @@ def main():
     player2 = Player(GRID_SIZE+GRID_SIZE%2-2, GRID_SIZE+GRID_SIZE%2-2, player_frames)
     bombs = []
     bombs2 = []
-    scoreboard = Scoreboard(player, player2)
+    scoreboard = Scoreboard([player, player2])
 
     while running:
         for y in range(1, GRID_SIZE - 1):
@@ -97,8 +103,8 @@ def main():
 
         # 放置炸弹
         if keyboard.is_pressed('shift'):
-            player2_tile_x = player2.x // TILE_SIZE
-            player2_tile_y = player2.y // TILE_SIZE
+            player2_tile_x = (player2.x + 8) // TILE_SIZE
+            player2_tile_y = (player2.y + 8) // TILE_SIZE
             if not any(bomb2.tile_x == player2_tile_x and bomb2.tile_y == player2_tile_y for bomb2 in bombs):
                 # 调整爆炸范围到 3 格
                 bombs.append(Bomb(player2_tile_x, player2_tile_y, player2.explosion_range, player))
@@ -127,6 +133,7 @@ def main():
         game_map.draw(screen, {
             TileType.UNBREAKABLE: tile_unbreakable_img,
             TileType.BREAKABLE: tile_breakable_img,
+            TileType.AROUND: tile_around_img
         })
         scoreboard.draw(screen)
         #player.update_animation()
