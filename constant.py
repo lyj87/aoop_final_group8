@@ -22,3 +22,6 @@ class TileType:
     BUFF_RANGE = 4
     BUFF_NUM = 5
     HEAL = 6
+    GRASS_BUFF_RANGE = 7
+    GRASS_BUFF_NUM = 8
+    GRASS_HEAL = 9

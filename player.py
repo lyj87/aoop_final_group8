@@ -1,6 +1,6 @@
 import pygame
 
-from constant import TILE_SIZE, TileType
+from constant import *
 
 # 玩家类
 class Player:
@@ -53,8 +53,18 @@ class Player:
         for corner in corners:
             x = corner[0] // TILE_SIZE
             y = corner[1] // TILE_SIZE 
-            if (grid[x][y] != TileType.EMPTY):  # 如果角点处是障碍物
+            if (grid[x][y] == TileType.BREAKABLE or grid[x][y] == TileType.UNBREAKABLE or grid[x][y] == TileType.AROUND or 
+                grid[x][y] == TileType.GRASS_BUFF_NUM or grid[x][y] == TileType.GRASS_BUFF_RANGE or grid[x][y] == TileType.GRASS_HEAL):
                 return False
+            if (grid[x][y] == TileType.BUFF_NUM):
+                self.bomb += 1
+                grid[x][y] = TileType.EMPTY
+            if (grid[x][y] == TileType.BUFF_RANGE):
+                self.explosion_range += 1
+                grid[x][y] = TileType.EMPTY
+            if (grid[x][y] == TileType.HEAL):
+                self.heal += 1
+                grid[x][y] = TileType.EMPTY
         return True
     
     def update_animation(self):
@@ -64,7 +74,6 @@ class Player:
             self.frame_timer = 0
             self.frame_index = (self.frame_index + 1) % len(self.image_frame[self.direction])
     
-
     def draw(self, screen):
         
         # 获取当前方向和帧

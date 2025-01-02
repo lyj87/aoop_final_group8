@@ -24,6 +24,15 @@ tile_unbreakable_img = pygame.transform.scale(tile_unbreakable_img, (TILE_SIZE, 
 tile_breakable_img = assets_img.subsurface(3 * IMG_SIZE, 13 * IMG_SIZE, IMG_SIZE, IMG_SIZE)
 tile_breakable_img = pygame.transform.scale(tile_breakable_img, (TILE_SIZE, TILE_SIZE))
 
+tile_buff_num_img = pygame.image.load("./assets/icon_bomb_num.png")
+tile_buff_num_img = pygame.transform.scale(tile_buff_num_img, (TILE_SIZE, TILE_SIZE))
+
+tile_buff_range_img = pygame.image.load("./assets/icon_bomb_range.png")
+tile_buff_range_img = pygame.transform.scale(tile_buff_range_img, (TILE_SIZE, TILE_SIZE))
+
+tile_heal_img = pygame.image.load("./assets/icon_heal.png")
+tile_heal_img = pygame.transform.scale(tile_heal_img, (TILE_SIZE, TILE_SIZE))
+
 player_img = pygame.image.load("./assets/player.png")
 player_frames = player_img
 
@@ -36,7 +45,7 @@ player_frames = {
 for i in range(6):  # 6 frames per direction
     player_frames["DOWN"].append(player_img.subsurface((i * IMG_SIZE, 3 * IMG_SIZE, IMG_SIZE, IMG_SIZE)))
     player_frames["RIGHT"].append(player_img.subsurface((i * IMG_SIZE, 4 * IMG_SIZE, IMG_SIZE, IMG_SIZE)))
-    player_frames["LEFT"].append(player_img.subsurface((i * IMG_SIZE, 4 * IMG_SIZE, IMG_SIZE, IMG_SIZE)))
+    player_frames["LEFT"].append(pygame.transform.flip(player_img.subsurface((i * IMG_SIZE, 4 * IMG_SIZE, IMG_SIZE, IMG_SIZE)), True, False))
     player_frames["UP"].append(player_img.subsurface((i * IMG_SIZE, 5 * IMG_SIZE, IMG_SIZE, IMG_SIZE)))
 
 
@@ -47,10 +56,10 @@ def main():
 
     game_map = Map()
     player = Player(1, 1, player_frames)
-    player2 = Player(GRID_SIZE -2 , GRID_SIZE - 2, player_frames)
-    # player2 = Player(GRID_SIZE+GRID_SIZE%2-2, GRID_SIZE+GRID_SIZE%2-2, player_frames)
-    bombs = []
-    bombs2 = []
+    player2 = Player(GRID_SIZE - 2 , GRID_SIZE - 2, player_frames)
+    bombs = Bomb(None, None, explosion_range = 1, owner = None)
+    bombs_list = []
+    bombs2_list = []
     scoreboard = Scoreboard([player, player2])
 
     while running:
@@ -105,15 +114,15 @@ def main():
             player2_tile_y = (player2.y + 8) // TILE_SIZE
             if not any(bomb2.tile_x == player2_tile_x and bomb2.tile_y == player2_tile_y for bomb2 in bombs):
                 # 调整爆炸范围到 3 格
-                bombs.append(Bomb(player2_tile_x, player2_tile_y, player2.explosion_range, player))
+                bombs.append(Bomb(player2_tile_x, player2_tile_y, player2.explosion_range, player2))
 
         # 更新炸弹状态
-        for bomb in bombs:
+        for bomb in bombs_list:
             bomb.update(game_map.grid, [player, player2])
             if bomb.exploded:
                 bomb.explosion(game_map.grid, [player, player2])
 
-        for bomb in bombs2:
+        for bomb in bombs2_list:
             bomb.update(game_map.grid, [player, player2])
             if bomb.exploded:
                 bomb.explosion(game_map.grid, [player, player2])
@@ -131,10 +140,16 @@ def main():
         game_map.draw(screen, {
             TileType.UNBREAKABLE: tile_unbreakable_img,
             TileType.BREAKABLE: tile_breakable_img,
-            TileType.AROUND: tile_around_img
+            TileType.AROUND: tile_around_img,
+            TileType.BUFF_NUM: tile_buff_num_img,
+            TileType.BUFF_RANGE: tile_buff_range_img,
+            TileType.HEAL: tile_heal_img,
+            TileType.GRASS_BUFF_NUM: tile_breakable_img,
+            TileType.GRASS_BUFF_RANGE: tile_breakable_img,
+            TileType.GRASS_HEAL: tile_breakable_img
         })
         scoreboard.draw(screen)
-        #player.update_animation()
+        player.update_animation()
         player.draw(screen)
         player2.draw(screen)
 
