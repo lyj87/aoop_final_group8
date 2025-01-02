@@ -8,6 +8,7 @@ class Map:
         self.generate_map()
         self.shrink_count = 0  # 缩小次数计数
         self.timer = 150  # 爆炸倒计时 5 秒（30 幀/秒）
+        self.is_finished = False
 
     def generate_map(self):
         # 边缘设置为不可破坏的石块
@@ -69,19 +70,22 @@ class Map:
                 heal_count += 1
                 print(f"HEAL: {heal_count} at ({x}, {y})")
 
-    # def shrink_map(self):
-    #     # 缩小地图边界
-    #     if self.timer > 0 and GRID_SIZE // 2 > self.shrink_count:  # 确保不会缩小到中心点
-    #         layer = self.shrink_count
-    #         self.timer -= 1
-    #         for i in range(layer, GRID_SIZE - layer):
-    #             self.grid[layer][i] = TileType.AROUND
-    #             self.grid[GRID_SIZE - 1 - layer][i] = TileType.AROUND
-    #             if i != layer:
-    #                 self.grid[i][layer] = TileType.UNBREAKABLE
-    #             self.grid[i][GRID_SIZE - 1 - layer] = TileType.UNBREAKABLE
-    #         self.shrink_count += 1
-    #         print(f"Map shrunk to layer {self.shrink_count}")
+    def shrink_map(self):
+        # 缩小地图边界
+        if self.timer > 0:  # 确保不会缩小到中心点
+            self.timer -= 1
+            
+        elif self.timer == 0 and GRID_SIZE // 2 > self.shrink_count:
+            layer = self.shrink_count
+            for i in range(layer, GRID_SIZE - layer):
+                self.grid[layer][i] = TileType.UNBREAKABLE
+                self.grid[GRID_SIZE - 1 - layer][i] = TileType.UNBREAKABLE
+                self.grid[i][layer] = TileType.UNBREAKABLE
+                self.grid[i][GRID_SIZE - 1 - layer] = TileType.UNBREAKABLE
+            self.shrink_count += 1
+            self.timer = 150  # 重置计时器
+        elif GRID_SIZE // 2 <= self.shrink_count:
+            self.is_finished = True
 
     def draw(self, screen, tile_img):
         for y in range(GRID_SIZE):

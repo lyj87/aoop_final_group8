@@ -118,7 +118,5 @@ class Bomb:
 
             self.explosion_timer -= 1
 
-            
-
     def is_finished(self):
         return self.exploded and self.explosion_timer <= 0

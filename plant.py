@@ -21,3 +21,6 @@ class Plant:
         if self.timer > 0:
             # 绘制种子
             screen.blit(tile_water_img, (self.x, self.y))
+
+    def is_finished(self):
+        return self.grown
