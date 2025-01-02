@@ -11,18 +11,17 @@ pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption(f"{GRID_SIZE}x{GRID_SIZE} Map Game")
 assets_img = pygame.image.load("./assets/assets.png")
-background_img = pygame.image.load("./assets/background.png")
+
+background_img = assets_img.subsurface(1 * 32, 3 * 32, 32, 32)
 background_img = pygame.transform.scale(background_img, (TILE_SIZE, TILE_SIZE))
 
 tile_around_img = assets_img.subsurface(10 * 32, 18 * 32, 32, 32)
 tile_around_img = pygame.transform.scale(tile_around_img, (TILE_SIZE, TILE_SIZE))
 
-# tile_unbreakable_img = pygame.image.load("./assets/stone.png")
 tile_unbreakable_img = assets_img.subsurface(10 * 32, 17 * 32, 32, 32)
 tile_unbreakable_img = pygame.transform.scale(tile_unbreakable_img, (TILE_SIZE, TILE_SIZE))
 
-# tile_breakable_img = pygame.image.load("./assets/assets.png")
-tile_breakable_img = assets_img.subsurface(9 * 32, 13 * 32, 32, 32)
+tile_breakable_img = assets_img.subsurface(3 * 32, 13 * 32, 32, 32)
 tile_breakable_img = pygame.transform.scale(tile_breakable_img, (TILE_SIZE, TILE_SIZE))
 
 player_img = pygame.image.load("./assets/player.png")

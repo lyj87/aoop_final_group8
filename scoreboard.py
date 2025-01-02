@@ -2,9 +2,8 @@ import pygame
 from constant import GRID_SIZE, TILE_SIZE, SCOREBOARD_WIDTH, GRAY, WHITE, SCREEN_HEIGHT
 
 class Scoreboard:
-    def __init__(self, player, player2):
-        self.player = player
-        self.player2 = player2
+    def __init__(self, players):
+        self.players = players
         self.font = pygame.font.SysFont("Arial", 24)
         self.title_font = pygame.font.SysFont("Arial", 32, bold=True)
         self.subtitle_font = pygame.font.SysFont("Arial", 24, bold=True)
