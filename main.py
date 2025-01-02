@@ -12,22 +12,21 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption(f"{GRID_SIZE}x{GRID_SIZE} Map Game")
 assets_img = pygame.image.load("./assets/assets.png")
 
-background_img = assets_img.subsurface(1 * 32, 3 * 32, 32, 32)
+background_img = assets_img.subsurface(1 * IMG_SIZE, 3 * IMG_SIZE, IMG_SIZE, IMG_SIZE)
 background_img = pygame.transform.scale(background_img, (TILE_SIZE, TILE_SIZE))
 
-tile_around_img = assets_img.subsurface(10 * 32, 18 * 32, 32, 32)
+tile_around_img = assets_img.subsurface(10 * IMG_SIZE, 18 * IMG_SIZE, IMG_SIZE, IMG_SIZE)
 tile_around_img = pygame.transform.scale(tile_around_img, (TILE_SIZE, TILE_SIZE))
 
-tile_unbreakable_img = assets_img.subsurface(10 * 32, 17 * 32, 32, 32)
+tile_unbreakable_img = assets_img.subsurface(10 * IMG_SIZE, 17 * IMG_SIZE, IMG_SIZE, IMG_SIZE)
 tile_unbreakable_img = pygame.transform.scale(tile_unbreakable_img, (TILE_SIZE, TILE_SIZE))
 
-tile_breakable_img = assets_img.subsurface(3 * 32, 13 * 32, 32, 32)
+tile_breakable_img = assets_img.subsurface(3 * IMG_SIZE, 13 * IMG_SIZE, IMG_SIZE, IMG_SIZE)
 tile_breakable_img = pygame.transform.scale(tile_breakable_img, (TILE_SIZE, TILE_SIZE))
 
 player_img = pygame.image.load("./assets/player.png")
-player_img= pygame.transform.scale(player_img, (TILE_SIZE, TILE_SIZE))
 player_frames = player_img
-'''
+
 player_frames = {
     "DOWN": [],
     "RIGHT": [],
@@ -35,11 +34,11 @@ player_frames = {
     "UP": []
 }
 for i in range(6):  # 6 frames per direction
-    player_frames["DOWN"].append(player_img.subsurface((i * 32, 3 * 32, 32, 32)))
-    player_frames["RIGHT"].append(player_img.subsurface((i * 32, 4 * 32, 32, 32)))
-    player_frames["LEFT"].append(player_img.subsurface((i * 32, 4 * 32, 32, 32)))
-    player_frames["UP"].append(player_img.subsurface((i * 32, 5 * 32, 32, 32)))
-'''
+    player_frames["DOWN"].append(player_img.subsurface((i * IMG_SIZE, 3 * IMG_SIZE, IMG_SIZE, IMG_SIZE)))
+    player_frames["RIGHT"].append(player_img.subsurface((i * IMG_SIZE, 4 * IMG_SIZE, IMG_SIZE, IMG_SIZE)))
+    player_frames["LEFT"].append(player_img.subsurface((i * IMG_SIZE, 4 * IMG_SIZE, IMG_SIZE, IMG_SIZE)))
+    player_frames["UP"].append(player_img.subsurface((i * IMG_SIZE, 5 * IMG_SIZE, IMG_SIZE, IMG_SIZE)))
+
 
 clock = pygame.time.Clock()
 
@@ -48,8 +47,8 @@ def main():
 
     game_map = Map()
     player = Player(1, 1, player_frames)
-    #player2 = Player(GRID_SIZE -2 , GRID_SIZE - 2, player_frames)
-    player2 = Player(GRID_SIZE+GRID_SIZE%2-2, GRID_SIZE+GRID_SIZE%2-2, player_frames)
+    player2 = Player(GRID_SIZE -2 , GRID_SIZE - 2, player_frames)
+    # player2 = Player(GRID_SIZE+GRID_SIZE%2-2, GRID_SIZE+GRID_SIZE%2-2, player_frames)
     bombs = []
     bombs2 = []
     scoreboard = Scoreboard([player, player2])

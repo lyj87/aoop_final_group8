@@ -1,23 +1,6 @@
 import pygame
-import random
-import keyboard
 
 from constant import TILE_SIZE, TileType
-'''
-player_img = pygame.image.load("./assets/player.png")
-player_frames = {
-    "DOWN": [],
-    "RIGHT": [],
-    "LEFT": [],
-    "UP": []
-}
-for i in range(6):  # 6 frames per direction
-    player_frames["DOWN"].append(player_img.subsurface((i * 32, 3 * 32, 32, 32)))
-    player_frames["RIGHT"].append(player_img.subsurface((i * 32, 4 * 32, 32, 32)))
-    player_frames["LEFT"].append(player_img.subsurface((i * 32, 4 * 32, 32, 32)))
-    player_frames["UP"].append(player_img.subsurface((i * 32, 5 * 32, 32, 32)))
-'''
-
 
 # 玩家类
 class Player:
@@ -73,31 +56,17 @@ class Player:
             if (grid[x][y] != TileType.EMPTY):  # 如果角点处是障碍物
                 return False
         return True
-    '''
+    
     def update_animation(self):
         # 每隔一定时间更新动画帧
         self.frame_timer += 1
         if self.frame_timer >= 6:  # 6帧更新一次
             self.frame_timer = 0
             self.frame_index = (self.frame_index + 1) % len(self.image_frame[self.direction])
-    '''
     
 
     def draw(self, screen):
-        '''
+        
         # 获取当前方向和帧
         current_frame = self.image_frame[self.direction][self.frame_index]
         screen.blit(current_frame, (self.x, self.y))
-        '''
-        
-        # 根据方向绘制角色图片
-        if self.direction == "UP":
-            rotated_image = pygame.transform.rotate(self.image, 90)
-        elif self.direction == "DOWN":
-            rotated_image = pygame.transform.rotate(self.image, -90)
-        elif self.direction == "LEFT":
-            rotated_image = pygame.transform.flip(self.image, True, False)
-        else:  # "RIGHT"
-            rotated_image = self.image
-
-        screen.blit(rotated_image, (self.x, self.y))
