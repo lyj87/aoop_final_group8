@@ -6,20 +6,21 @@ class Plant:
         self.y = y * TILE_SIZE
         self.tile_x = x
         self.tile_y = y
-        self.timer = 150  # 成长倒计时 5 秒（30 帧/秒）
+        self.timer = 150  # 成長倒計時 5 秒（30 幀/秒）
         self.grown = False
 
     def update(self, grid):
         if self.timer > 0:
-            grid[self.tile_x][self.tile_y] = TileType.WATER  # 标记种子位置
+            grid[self.tile_x][self.tile_y] = TileType.WATER  # 標記水的位置
             self.timer -= 1
+        # 成長
         elif not self.grown:
             self.grown = True
-            grid[self.tile_x][self.tile_y] = TileType.BREAKABLE  # 变成草丛
+            grid[self.tile_x][self.tile_y] = TileType.BREAKABLE  # 成長後變成草叢
 
     def draw(self, screen):
         if self.timer > 0:
-            # 绘制种子
+            # 繪製水
             screen.blit(tile_water_img, (self.x, self.y))
 
     def is_finished(self):
