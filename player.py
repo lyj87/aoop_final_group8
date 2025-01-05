@@ -2,7 +2,7 @@ from constant import *
 
 # 玩家类
 class Player:
-    def __init__(self, x, y, frames, explosion_range, score, heal, bomb_num, plant_num, name):
+    def __init__(self, x, y, name, frames):
         self.dx = x
         self.dy = y
         self.x = x * TILE_SIZE  # 轉換成像素坐標
@@ -17,11 +17,11 @@ class Player:
         self.placed_water = 0  # 是否正在放置植物
         self.name = name
 
-        self.explosion_range = explosion_range  # 初始爆炸範圍
-        self.score = score  # 初始分數為
-        self.heal = heal    # 初始生命值
-        self.bomb_num = bomb_num    # 初始炸彈數量
-        self.plant_num = plant_num  # 初始植物數量
+        self.explosion_range = 1  # 初始爆炸範圍
+        self.score = 0  # 初始分數為
+        self.heal = 2    # 初始生命值
+        self.bomb_num = 1    # 初始炸彈數量
+        self.plant_num = 1  # 初始植物數量
 
     def set_direction(self, dx, dy):
         if dx > 0:

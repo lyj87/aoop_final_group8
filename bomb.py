@@ -17,7 +17,8 @@ class Bomb:
         self.y = y * TILE_SIZE
         self.tile_x = x
         self.tile_y = y
-        self.timer = 90  # 爆炸倒计时 3 秒（30 幀/秒）
+        #self.timer = 90  # 爆炸倒计时 3 秒（30 幀/秒）
+        self.timer = 60  # 爆炸倒计时 2 秒（30 幀/秒）
         self.exploded = False   # 是否已爆炸
         self.explosion_range = explosion_range  # 爆炸范围
         self.owner = owner  # 炸彈主人
