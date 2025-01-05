@@ -1,12 +1,13 @@
-from stable_baselines3 import PPO
+from stable_baselines3 import DQN
 from stable_baselines3.common.vec_env import DummyVecEnv
 from env import BombermanEnv
 
-def test_model():
-    # 創建環境
+def test_dqn_model():
+    #創建環境
     env = DummyVecEnv([lambda: BombermanEnv(render_mode="human")])
-    # 載入PPO模型
-    model = PPO.load("saved_models/bomberman_ai")
+
+    # 載入DQN模型
+    model = DQN.load("saved_models/bomberman_dqn_ai")
 
     obs = env.reset()
     done = False
@@ -18,5 +19,5 @@ def test_model():
         reward_list.append(reward)
         print(f"Action: {action}, Reward: {reward}")
         env.render()
-    
+
     print("Test completed!")
