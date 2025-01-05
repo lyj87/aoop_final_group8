@@ -55,16 +55,18 @@ sudo python3 __init__.py
   按 R 可重新遊玩。
   按 P 回到開始界面。
 
-  ## 類圖
+## 類圖
 
-  ### 類圖 1: 遊戲主結構
-  ![Game Structure](diagrams/classes_finalproject.png)
+### 類圖 1: 遊戲主套件結構
+![遊戲主套件結構](diagrams/packages_finalproject.png)
 
-  ### 類圖 2: 玩家類
-  ![Player Classes](diagrams/classes_finalproject.png)
+### 類圖 2: 類別結構
+![類別結構](diagrams/classes_finalproject.png)
+
 
 ## 作者
 TJKAI00  https://github.com/TJKAI00
+
 lyj87  https://github.com/lyj87
 
 ## 授權
