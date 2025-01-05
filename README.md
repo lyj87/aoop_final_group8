@@ -21,7 +21,7 @@ cd ./path/aoop_final_group8
 
 Install the required dependencies
 ```
-pip pygame
+pip install pygame
 ```
 Run the game
 ```
@@ -62,3 +62,29 @@ https://kenmi-art.itch.io/cute-fantasy-rpg
 https://www.freepik.com/premium-vector/bomb-pixel-art-style_22989300.htm
 
 https://www.vecteezy.com/vector-art/24693834-pixel-art-heart-love-and-valentine
+
+# stable baselines3
+
+## 簡介
+
+Stable Baselines3 是一個基於 Python 的開源深度強化學習框架，專為研究和應用強化學習（Reinforcement Learning, RL）算法而設計。它是原始 Stable Baselines 的重寫版，改用 PyTorch 作為深度學習框架，提供更現代化、更易於擴展和維護的架構。
+
+### 主要特點
+
+- 多種算法支持：Stable Baselines3 提供多種主流強化學習算法的實現，包括 DQN、PPO、A2C、SAC、TD3 等，方便用戶快速上手和應用不同的算法。
+
+- 易於使用：該框架旨在降低強化學習的入門門檻，通過簡單的 API，使用者可以快速定義和訓練模型。
+
+- 模組化：架構設計模組化，允許用戶輕鬆擴展和自定義算法、環境、策略等。
+
+## 用法
+
+Install the required dependencies
+```
+pip install gymnasium
+pip install stable-baselines3
+```
+
+注意不要pip install gym ，這個是老版本，python 也不要太新，截至2025年1月5日，推薦使用的python版本為3.12.8及以前，不要安裝3.13的
+
+主要任務是編寫env.py檔案，設置環境與獎勵
