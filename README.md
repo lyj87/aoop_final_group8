@@ -58,10 +58,10 @@ sudo python3 __init__.py
   ## 類圖
 
   ### 類圖 1: 遊戲主結構
-  ![Game Structure](diagrams/game_structure.png)
+  ![Game Structure](diagrams/classes_finalproject.png)
 
   ### 類圖 2: 玩家類
-  ![Player Classes](diagrams/player_classes.png)
+  ![Player Classes](diagrams/classes_finalproject.png)
 
 ## 作者
 TJKAI00  https://github.com/TJKAI00
