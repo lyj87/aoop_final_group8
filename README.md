@@ -88,3 +88,9 @@ pip install stable-baselines3
 注意不要pip install gym ，這個是老版本，python 也不要太新，截至2025年1月5日，推薦使用的python版本為3.12.8及以前，不要安裝3.13的
 
 主要任務是編寫env.py檔案，設置環境與獎勵
+
+## 參考鏈接
+
+https://github.com/DLR-RM/stable-baselines3
+
+https://stable-baselines3.readthedocs.io/en/master/
