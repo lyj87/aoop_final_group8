@@ -7,16 +7,17 @@ from map import Map
 from bomb import Bomb
 from scoreboard import Scoreboard
 from plant import Plant
+from page import Page
 
-
-class Game:
+class Game(Page):
     def __init__(self, screen, player1_name, player2_name):
+        super().__init__(screen)
         # 字體
         self.font = pygame.font.SysFont('notosanscjktc', 36)
         self.title_font = pygame.font.SysFont('Arial', 84)
         self.puase_font = pygame.font.SysFont('Arial', 300)
+
         # 畫
-        self.screen = screen
         pygame.display.set_caption(f"{GRID_SIZE}x{GRID_SIZE} Map Game")
         self.clock = pygame.time.Clock()
 
@@ -24,13 +25,13 @@ class Game:
         self.state = "game"  
 
         # 玩家對象
+        self.game_map = Map()
         self.player1 = Player(1, 1, player1_name, player1_frames)
         self.player2 = Player(GRID_SIZE - 2, GRID_SIZE - 2, player2_name, player2_frames)
-        self.game_map = Map()
         self.scoreboard = Scoreboard([self.player1, self.player2], self.game_map)
-        
         self.bombs_list = []
         self.plant_list = []
+        self.clock = pygame.time.Clock()
         
     def pause_screen(self):
         while self.state == "pause":
@@ -78,6 +79,7 @@ class Game:
                         sys.exit()
 
     def game_loop(self):
+        #self.state = "game"
         while self.state == "game":
             # 繪製地圖
             for y in range(GRID_SIZE):
@@ -111,7 +113,7 @@ class Game:
             self.player2.move(dx2, dy2, self.game_map.grid)
 
             # player 1 放置炸彈
-            if keys[pygame.K_q]:
+            if keys[pygame.K_f]:
                 player_tile_x = (self.player1.x + 8) // TILE_SIZE
                 player_tile_y = (self.player1.y + 8) // TILE_SIZE
                 if len(self.bombs_list) < self.player1.bomb_num and not any(bomb.tile_x == player_tile_x and bomb.tile_y == player_tile_y for bomb in self.bombs_list):
@@ -119,7 +121,7 @@ class Game:
                     self.player1.placed_bomb = 1
 
             # player 1 放置植物
-            if keys[pygame.K_e]:
+            if keys[pygame.K_g]:
                 player_tile_x = (self.player1.x + 8) // TILE_SIZE
                 player_tile_y = (self.player1.y + 8) // TILE_SIZE
                 if len(self.plant_list) < self.player1.plant_num and not any(plant.tile_x == player_tile_x and plant.tile_y == player_tile_y for plant in self.plant_list):
@@ -127,14 +129,14 @@ class Game:
                     self.player1.placed_water = 1
 
             # player 2 放置炸彈
-            if keys[pygame.K_RSHIFT]:
+            if keys[pygame.K_m]:
                 player2_tile_x = (self.player2.x + 8) // TILE_SIZE
                 player2_tile_y = (self.player2.y + 8) // TILE_SIZE
                 if len(self.bombs_list) < self.player2.bomb_num and not any(bomb.tile_x == player2_tile_x and bomb.tile_y == player2_tile_y for bomb in self.bombs_list):
                     self.bombs_list.append(Bomb(player2_tile_x, player2_tile_y, self.player2.explosion_range, self.player2))
                     self.player2.placed_bomb = 1
 
-            if keys[pygame.K_SLASH]:
+            if keys[pygame.K_n]:
                 player_tile_x = (self.player2.x + 8) // TILE_SIZE
                 player_tile_y = (self.player2.y + 8) // TILE_SIZE
                 if len(self.plant_list) < self.player1.plant_num and not any(plant.tile_x == player_tile_x and plant.tile_y == player_tile_y for plant in self.plant_list):
@@ -212,10 +214,10 @@ class Game:
         pygame.display.flip()
     
 
-if __name__ == "__main__":
-    pygame.init()
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-    game = Game(screen, "player1", "player2")
-    game.game_loop()
-    pygame.quit()
-    sys.exit()
+# if __name__ == "__main__":
+#     pygame.init()
+#     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+#     game = Game(screen, "player1", "player2")
+#     game.game_loop()
+#     pygame.quit()
+#     sys.exit()

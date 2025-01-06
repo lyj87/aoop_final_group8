@@ -4,7 +4,7 @@ import pygame
 TILE_SIZE = 32  # 磚塊大小
 GRID_SIZE = 19  # 磚塊數量，地圖大小
 IMG_SIZE = 32
-SCOREBOARD_WIDTH = 250  # 計分板寬度
+SCOREBOARD_WIDTH = 230  # 計分板寬度
 GAME_HEIGHT = GRID_SIZE * TILE_SIZE # 游戲視窗高度（不包含計分板）
 GAME_WIDTH = GRID_SIZE * TILE_SIZE  # 游戲視窗寬度（不包含計分板）
 SCREEN_WIDTH = GRID_SIZE * TILE_SIZE + SCOREBOARD_WIDTH # 視窗寬度

@@ -46,9 +46,9 @@ sudo python3 __init__.py
   
 - 遊戲界面
 
-  玩家一通過 WASD 控制角色移動，Q 是放炸彈，E 是製造障礙物。
+  玩家一通過 WASD 控制角色移動，F 是放炸彈，G 是製造障礙物。
 
-  玩家二通過上下左右鍵控制角色移動，Shift 是放炸彈，'/' 是製造障礙物。
+  玩家二通過上下左右鍵控制角色移動，M 是放炸彈，N 是製造障礙物。
 
 - Game Over 界面
 
@@ -61,7 +61,7 @@ sudo python3 __init__.py
 ![遊戲主套件結構](diagrams/packages_finalproject.png)
 
 ### 類圖 2: 類別結構
-![類別結構](diagrams/classes_finalproject.png)
+![類別結構](diagrams/classes_finalproject_new.png)
 
 
 ## 作者
