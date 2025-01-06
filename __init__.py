@@ -30,7 +30,7 @@ while running:
         name1, name2 = mainmenu.start()
         state = mainmenu.state
         print('player1:', name1, ', player2:', name2)
-        print("state:", state)        
+        print("state:", state)    
     elif state == "game":
         game = Game(screen, name1, name2)
         print(state)
@@ -39,7 +39,8 @@ while running:
     elif state == "gameover":
         state = "gameover"
         overscreen = GameOverScreen(screen)
-        overscreen.display()
+        overscreen.display(game.player1, game.player2)
+        state = overscreen.state
     elif state == "pause":
         game.pause_screen()
         state = game.state
