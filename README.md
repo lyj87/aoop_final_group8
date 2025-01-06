@@ -80,3 +80,14 @@ MIT
 - https://kenmi-art.itch.io/cute-fantasy-rpg
 - https://www.freepik.com/premium-vector/bomb-pixel-art-style_22989300.htm
 - https://www.vecteezy.com/vector-art/24693834-pixel-art-heart-love-and-valentine
+
+# statble baselines3
+
+## 簡介
+
+Stable Baselines3 是一個基於 Python 的開源深度強化學習框架，專為研究和應用強化學習（Reinforcement Learning, RL）算法而設計。它是由 OpenAI Baselines 專案演化而來的，並對程式碼結構進行了現代化和簡化，更易於擴展和維護的架構。
+
+## 特點
+- 多種算法支持：Stable Baselines3 提供多種主流強化學習算法的實現，包括 DQN、PPO、A2C、SAC、TD3 等，方便用戶快速上手和應用不同的算法。
+- 易於使用：該框架旨在降低強化學習的入門門檻，通過簡單的 API，使用者可以快速定義和訓練模型。
+- 模組化：架構設計模組化，允許用戶輕鬆擴展和自定義算法、環境、策略等。
